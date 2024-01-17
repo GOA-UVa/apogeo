@@ -1,0 +1,91 @@
+'CR300 Series Datalogger Program for Measuring with two Apogee Model SI-111 Infrared Radiometers
+
+'########################
+'#### PUBLIC VARIABLES
+'########################
+Public PanelT, BattV
+'Declare public variables of apogee_0
+Public SBTempC_0, SBTempK_0, TargmV_0, m_0, b_0, TargTempK_0, TargTempC_0
+'Declare public variables of apogee_1
+Public SBTempC_1, SBTempK_1, TargmV_1, m_1, b_1, TargTempK_1, TargTempC_1
+
+'####################
+'#### COEFFICIENTS
+'####################
+'Coefficients of apogee_0
+Const mC2_0 = 97865.6
+Const mC1_0 = 10793800
+Const mC0_0 = 1669750000
+Const bC2_0 = -2181.18
+Const bC1_0 = 65081.3
+Const bC0_0 = -1272120
+'Coefficients of apogee_1
+Const mC2_1 = 117219
+Const mC1_1 = 12542100
+Const mC0_1 = 2050190000
+Const bC2_1 = 3624.76
+Const bC1_1 = -197505
+Const bC0_1 = -12387300
+
+'#################
+'#### DATA TABLE
+'#################
+'Se define la tabla de salida
+DataTable (IRR,1,-1)
+ 'Intervalos de 6 seconds, que contienen 3 medidas de cada uno (6/2 = 3))
+ DataInterval (0,6,Sec,3)
+ 'Minimum (1,BattV,FP2,0,False)
+ Sample (1,PanelT,FP2)
+ 'Average (1,TargmV_0,FP2,False)
+ Average (1,SBTempC_0,FP2,False)
+ Average (1,TargTempC_0,FP2,False)
+ Average (1,SBTempC_1,FP2,False)
+ Average (1,TargTempC_1,FP2,False)
+EndTable
+
+'#################
+'#### MAIN PROGRAM
+'#################
+'Programa principal
+BeginProg
+'Medidas cada 2 segundos
+ Scan (2,Sec,0,0)
+ PanelTemp (PanelT,_50Hz)
+ Battery (BattV)
+
+'# MEASURE SENSOR BODY TEMPERATURE
+'Medir temperatura del cuerpo del sensor
+'Cable verde a SE1 (1H), rojo a VX1, azul a tierra
+ Therm109 (SBTempC_0,1,1,Vx1,0,_50Hz,1.0,0)
+'Cable verde a SE2 (1L), rojo a VX2, azul a tierra
+ Therm109 (SBTempC_1,1,2,Vx2,0,_50Hz,1.0,0)
+'Lo de 1 y 2 es el SE al que se conecta el cable verde
+
+'# MEASURE mV OUTPUT OF THERMOPILE DETECTOR
+'Medir salida mV del detector de termopila
+'Blanco a 2H, negro a 2L, claro a tierra
+ VoltDiff (TargmV_0,1,mV2500,2,True ,0,_50Hz,1.0,0)
+'Blanco a 3H, negro a 3L, claro a tierra
+ VoltDiff (TargmV_1,1,mV2500,3,True ,0,_50Hz,1.0,0)
+'Lo de 2 y 3 es el canal al que se conectan (Canal 2 = 2H y 2L = SE3 y SE4; Canal 3 = 3H y 3L = SE5 y SE6)
+
+'# CALCULATION OF SLOPE AND INTERCEPT
+'Calculo de coeficientes m (pendiente) y b (intercept) para calcular la temperatura en objetivo
+ m_0 = mC2_0 * SBTempC_0^2 + mC1_0 * SBTempC_0 + mC0_0
+ b_0 = bC2_0 * SBTempC_0^2 + bC1_0 * SBTempC_0 + bC0_0
+ m_1 = mC2_1 * SBTempC_1^2 + mC1_1 * SBTempC_1 + mC0_1
+ b_1 = bC2_1 * SBTempC_1^2 + bC1_1 * SBTempC_1 + bC0_1
+
+'# CALC TARGET TEMP
+'Calculo de temperatura objetivo apogee_0
+ SBTempK_0 = SBTempC_0 + 273.15
+ TargTempK_0 = ((SBTempK_0^4) + m_0 * TargmV_0 + b_0)^0.25
+ TargTempC_0 = TargTempK_0 - 273.15
+'Calculo de temperatura objetivo apogee_0
+ SBTempK_1 = SBTempC_1 + 273.15
+ TargTempK_1 = ((SBTempK_1^4) + m_1 * TargmV_1 + b_1)^0.25
+ TargTempC_1 = TargTempK_1 - 273.15
+'Llamada a salida de tablas
+ CallTable IRR
+ NextScan
+EndProg
