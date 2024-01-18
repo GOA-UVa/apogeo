@@ -1,5 +1,7 @@
 # Apogeo
 
+sudo dmesg | grep tty
+
 ## SERIAL CMD HELP
 
 """

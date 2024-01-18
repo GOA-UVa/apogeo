@@ -75,9 +75,15 @@ class CR300():
         df = pd.concat(dfs)
         return df
 
+    def get_all_records_data(self):
+        self.send_command('reboot')
+        self.send_command('YES')
+        time.sleep(10)
+        return self.get_last_records_data()
+
 def main():
-    #port = '/dev/serial/by-id/usb-Campbell_Scientific__Inc._CR300_00000000050C-if00'
-    port = '/dev/ttyACM0'
+    port = '/dev/serial/by-id/usb-Campbell_Scientific__Inc._CR300_00000000050C-if00'
+    #port = '/dev/ttyACM0'
     outpath = 'out/data.csv'
     cr300 = CR300(port)
     connected = False
@@ -85,7 +91,7 @@ def main():
     while not connected:
         connected = cr300.connect()
     print('Connected')
-    df = cr300.get_last_records_data()
+    df = cr300.get_all_records_data()
     cr300.close()
     if os.path.exists(outpath):
         df0 = pd.read_csv(outpath, index_col=0)
