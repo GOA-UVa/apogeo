@@ -34,8 +34,8 @@ Const bC0_1 = -12387300
 DataTable (IRR,1,-1)
  'Intervalos de 6 seconds, que contienen 3 medidas de cada uno (6/2 = 3))
  DataInterval (0,6,Sec,3)
- ''Intervalos de 10 minutes, que contienen 5 medidas de cada uno (10/2 = 5))
- 'DataInterval (0,10,Min,5)
+ ''Intervalos de 5 minutes, que contienen 15 medidas de cada uno (300/20 = 15))
+ 'DataInterval (0,5,Min,15)
  'Minimum (1,BattV,FP2,0,False)
  Sample (1,PanelT,FP2)
  'Average (1,TargmV_0,FP2,False)
@@ -52,8 +52,8 @@ EndTable
 BeginProg
 'Medidas cada 2 segundos
  Scan (2,Sec,0,0)
-''Medidas cada 2 minutos
- 'Scan (2,Min,0,0)
+''Medidas cada 20 segundos
+ 'Scan (20,Sec,0,0)
  PanelTemp (PanelT,_50Hz)
  Battery (BattV)
 
