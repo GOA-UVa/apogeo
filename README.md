@@ -1,10 +1,67 @@
 # Apogeo
 
+Software encargado de recibir los datos del DataLogger CR300 que recibe datos de los apogees situados en la Base Marambio, y enviar esos mismos datos a un servidor sftp del GOA.
+
+Archivos presentes:
+- cr300: Modulo de python que permite acceder a los datos del CR300.
+- read_data.py: Script principal en python que lee el CR300 y sube los datos al servidor sftp.
+- apo2.CR300: Programa que se ejecuta dentro del CR300.
+- requirements.txt: Requisitos del entorno de python para poder ejecutar el read_data.py
+- run.bat: Fichero .bat para poder ejecutar el programa en cada arranque de Windows.
+- config.mock.json: Fichero json con datos de ejemplo que deberán ser sustituidos con los reales en producción, y guardado como config.json.
+
+## Como instalar y ejecutar
+
+### Código del CR300
+
+Para instalar/actualizar el código del DataLogger el usuario deberá
+abrir el programa PC400 y establecer una conexión con el CR300. Ahí se
+le presentará la opción "Send Program...", la cual pulsará. A partir
+de ahí el usuario ha de seleccionar el programa apo2.CR300 que se
+enviará al DataLogger. Es importante cambiar el formato de ficheros a
+mostrar de 'Program Files (\*.crb)' a 'All files (*)'.
+
+### Código de python
+
+#### Entorno virtual
+
+La siguiente información está explicada para ejecutar en Windows, en
+Linux es levemente distinto pero se asume que el usuario de Linux sabe
+encontrar los cambios necesarios.
+
+Idealmente este código se ejecutará en un entorno de ejecución de venv,
+que debería llamarse '.venv'. Si este directorio no existe, debería ser creado con:
+```sh
+python -m venv .venv
+```
+
+A continuación se activa el entorno de ejecución con:
+```sh
+.venv\Scripts\activate
+```
+
+Y finalmente se prepara el entorno virtual instalando los paquetes necesarios con:
+```sh
+pip install -r requirements.txt
+```
+
+#### Ejecución
+
+La ejecución simplemente deberá ser realizada mediante el fichero run.bat, que deberá indicarse a windows que se quiere ejecutar en cada arranque del equipo para que siempre se ejecute.
+
+## Como encontrar el puerto
+
+### Linux
+
 sudo dmesg | grep tty
 
-## SERIAL CMD HELP
+### Windows
 
-"""
+Via el explorador de dispositivos.
+
+## Serial CMD help output
+
+```
 Status Commands
   show timeout list (PakBus timeout list)
   show time queue (Time Queue (RTOS))
@@ -76,4 +133,4 @@ Action Commands
   cellular radio update (Cellular radio update)
   cellular reset (Cellular reset)
   PCAP capture (Wireshark PCAP capture)
-"""
+```

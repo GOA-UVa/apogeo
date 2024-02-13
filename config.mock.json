@@ -1,0 +1,7 @@
+{
+	"sftpuser": "sftpuser",
+	"sftppass": "sftppass",
+	"sftphost": "sftphost",
+	"sftpdir": "sftpdir",
+	"minutes_wait_loop": 60
+}
