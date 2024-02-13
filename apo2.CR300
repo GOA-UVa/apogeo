@@ -5,9 +5,9 @@
 '########################
 Public PanelT, BattV
 'Declare public variables of apogee_0
-Public SBTempC_0, SBTempK_0, TargmV_0, m_0, b_0, TargTempK_0, TargTempC_0
+Public SBTempC_0, SBTempK_Surface, TargmV_0, m_0, b_0, TargTempK_Surface, TargTempC_0
 'Declare public variables of apogee_1
-Public SBTempC_1, SBTempK_1, TargmV_1, m_1, b_1, TargTempK_1, TargTempC_1
+Public SBTempC_1, SBTempK_Sky, TargmV_1, m_1, b_1, TargTempK_Sky, TargTempC_1
 
 '####################
 '#### COEFFICIENTS
@@ -39,10 +39,10 @@ DataTable (IRR,1,-1)
  'Minimum (1,BattV,FP2,0,False)
  Sample (1,PanelT,FP2)
  'Average (1,TargmV_0,FP2,False)
- Average (1,SBTempC_0,FP2,False)
- Average (1,TargTempC_0,FP2,False)
- Average (1,SBTempC_1,FP2,False)
- Average (1,TargTempC_1,FP2,False)
+ Average (1,SBTempK_Surface,FP2,False)
+ Average (1,TargTempK_Surface,FP2,False)
+ Average (1,SBTempK_Sky,FP2,False)
+ Average (1,TargTempK_Sky,FP2,False)
 EndTable
 
 '#################
@@ -81,14 +81,14 @@ BeginProg
  b_1 = bC2_1 * SBTempC_1^2 + bC1_1 * SBTempC_1 + bC0_1
 
 '# CALC TARGET TEMP
-'Calculo de temperatura objetivo apogee_0
- SBTempK_0 = SBTempC_0 + 273.15
- TargTempK_0 = ((SBTempK_0^4) + m_0 * TargmV_0 + b_0)^0.25
- TargTempC_0 = TargTempK_0 - 273.15
-'Calculo de temperatura objetivo apogee_0
- SBTempK_1 = SBTempC_1 + 273.15
- TargTempK_1 = ((SBTempK_1^4) + m_1 * TargmV_1 + b_1)^0.25
- TargTempC_1 = TargTempK_1 - 273.15
+'Calculo de temperatura objetivo apogee_0 (surface)
+ SBTempK_Surface = SBTempC_0 + 273.15
+ TargTempK_Surface = ((SBTempK_Surface^4) + m_0 * TargmV_0 + b_0)^0.25
+ TargTempC_0 = TargTempK_Surface - 273.15
+'Calculo de temperatura objetivo apogee_1 (sky)
+ SBTempK_Sky = SBTempC_1 + 273.15
+ TargTempK_Sky = ((SBTempK_Sky^4) + m_1 * TargmV_1 + b_1)^0.25
+ TargTempC_1 = TargTempK_Sky - 273.15
 'Llamada a salida de tablas
  CallTable IRR
  NextScan
