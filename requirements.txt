@@ -1,3 +1,4 @@
 pandas>=2.0.3
 pyserial>=3.5
 pysftp>=0.2.9
+pyarrow>=15.0.0

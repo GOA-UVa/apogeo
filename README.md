@@ -47,9 +47,17 @@ pip install -r requirements.txt
 
 #### Ejecución
 
-La ejecución simplemente deberá ser realizada mediante el fichero run.bat, que deberá indicarse a windows que se quiere ejecutar en cada arranque del equipo para que siempre se ejecute.
+La ejecución simplemente deberá ser realizada mediante el fichero run.bat, que deberá
+indicarse a windows que se quiere ejecutar en cada arranque del equipo para que siempre se ejecute.
 
 ## Como encontrar el puerto
+
+El nombre del puerto al que está conectado el CR300 deberá introducirse en el campo "serialport"
+del fichero config.json.
+
+En Windows habitualmente es "COM4" y en Linux "/dev/ttyACM0". En Linux también puede introducirse
+el id directamente, lo cual quedaría para la instalación actual como:
+"/dev/serial/by-id/usb-Campbell_Scientific__Inc._CR300_00000000050C-if00".
 
 ### Linux
 
