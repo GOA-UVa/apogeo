@@ -27,10 +27,19 @@ def read_config() -> dict:
 
 
 def upload_file_sftp(path: str, config: dict):
+    class CnOptsNoHostKeys(pysftp.CnOpts):
+        def __init__(self):
+            self.log = False
+            self.compression = False
+            self.ciphers = None
+            self.hostkeys = None
     try:
-        cnopts = pysftp.CnOpts() # knownhosts='known_hosts'
-        if not config['host_key_checking']:
-            cnopts.hostkeys = None
+        cnopts = CnOptsNoHostKeys()
+        if config['host_key_checking']:
+            try:
+                cnopts = pysftp.CnOpts()
+            except pysftp.HostKeysException as e:
+                print(f'Warning: {e}')
         with pysftp.Connection(config['sftphost'], config['sftpuser'], password=config['sftppass'], cnopts=cnopts) as srv:
             print(f'Sending {path}...')
             dest_path = os.path.join(config['sftpdir'], os.path.basename(path))
@@ -39,7 +48,7 @@ def upload_file_sftp(path: str, config: dict):
         print(f'Error uploading file via sftp: {e}')
 
 
-def get_from_cr300(cr300: CR300, config: dict, outpath: str):
+def get_from_cr300(cr300: CR300, outpath: str):
     df = cr300.get_last_records_data()
     if os.path.exists(outpath):
         df0 = pd.read_csv(outpath, index_col=0)
@@ -128,7 +137,7 @@ def main():
             dt = datetime.now(tz=tz.utc)
             filename = dt.strftime('%Y-%m-%d.csv')
             outpath = os.path.join(out_dir, filename)
-            get_from_cr300(cr300, config, outpath)
+            get_from_cr300(cr300, outpath)
             print('Stored')
             upload_files(config, out_dir, filename)
             print('Uploaded through SFTP')
