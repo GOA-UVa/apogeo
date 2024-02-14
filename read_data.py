@@ -6,6 +6,7 @@ import json
 import traceback
 import signal
 import shutil
+from threading import Lock, Thread
 
 """___Third-Party Modules___"""
 import pandas as pd
@@ -61,17 +62,49 @@ def upload_files(config: dict, out_dir: str, current_file: str):
 
 
 _stopping = False
+_loop_lock = Lock()
 
 def gracefully_exit(signum, frame):
+    """
+    The _stopping global variable is set to True (allowing the exit of the main loop) and
+    the global _loop_lock is released, allowing to exit from the loop sleep. 
+    """
     global _stopping
-    _stopping = True
-    print('Gracefully exiting, program will finish when the current iteration of the main loop finishes.')
+    if not _stopping:
+        _stopping = True
+        print('Gracefully exiting, program will finish when the current iteration of the main loop finishes.')
+        _loop_lock.release()
+    else:
+        print('Graceful exit already requested. Please wait for the program to finish.')
+
+
+def _thread_loop_sleep(seconds: int, lock: Lock):
+    lock.acquire()
+    print('loopsleep')
+    time.sleep(seconds)
+    if not _stopping:
+        lock.release()
+
+
+def loop_sleep(seconds: int):
+    """
+    A new thread is created where the _loop_lock is acquired thus not letting this method
+    finish until it ends, or _loop_lock is released through a keyboard interrupt.
+    """
+    t = Thread(target=_thread_loop_sleep, args=(seconds, _loop_lock), daemon=True)
+    _loop_lock.release()
+    t.start()
+    time.sleep(5)
+    print('waiting for acquire')
+    _loop_lock.acquire()
+    print('releasing...')
 
 
 def main():
-    # TODO Improve logging, not regular prints
-    # TODO Gracefull exit not nice. It waits the sleeping time in order to exit
+    # TODO Improve logging, not regular prints.
+    # TODO Test that graceful exit is working.
     signal.signal(signal.SIGINT, gracefully_exit)
+    _loop_lock.acquire()
     config = read_config()
     port = config['serialport']
     wait_minutes = float(config['minutes_wait_loop'])
@@ -102,9 +135,8 @@ def main():
         except Exception as e:
             trace = traceback.format_exc()
             print(f'Error when running the main loop: {e}.\nTrace: {trace}')
-        if _stopping:
-            break
-        time.sleep(60 * wait_minutes)
+        if not _stopping:
+            loop_sleep(60 * wait_minutes)
     cr300.close()
     print('Finished running')
 
