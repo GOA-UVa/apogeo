@@ -41,9 +41,9 @@ def upload_file_ftp(path: str, config: dict):
         filename = os.path.basename(path)
         dest_path = os.path.join(remotedir, filename)
         if filename in [os.path.basename(f) for f in ftp_server.nlst(remotedir)]:
-            log.info(f'Removing server file {dest_path}')
+            log.debug(f'Removing server file {dest_path}')
             ftp_server.delete(dest_path)
-        log.info(f'Sending {path}...')
+        log.debug(f'Sending {path}...')
         filesize = os.path.getsize(path)
         pl = ProcessLogger(filesize, BUFFER_SIZE, ftp_server)
         try:

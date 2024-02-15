@@ -90,7 +90,6 @@ def loop_sleep(seconds: int):
 
 
 def run():
-    # TODO Improve logging, not regular prints.
     signal.signal(signal.SIGINT, gracefully_exit)
     _loop_lock.acquire()
     config = read_config()
@@ -98,7 +97,7 @@ def run():
     port = config['serialport']
     wait_minutes = float(config['minutes_wait_loop'])
     try:
-        cr300 = CR300(port)
+        cr300 = CR300(port, fast=True)
     except Exception as e:
         msg = f'ERROR opening connection with CR300: {e}.\nMake sure no other program is connected to the CR300 (PC400, LoggerNet...)'
         print(msg)
@@ -118,9 +117,9 @@ def run():
             filename = dt.strftime('%Y-%m-%d.csv')
             outpath = os.path.join(out_dir, filename)
             get_from_cr300(cr300, outpath)
-            log.debug('Stored CR300 info')
+            log.info('Stored CR300 info')
             upload_files(config, out_dir, filename)
-            log.debug('Uploaded files through FTP')
+            log.info('Uploaded files through FTP')
         except Exception as e:
             trace = traceback.format_exc()
             log.error(f'Error when running the main loop: {e}.\nTrace: {trace}')
