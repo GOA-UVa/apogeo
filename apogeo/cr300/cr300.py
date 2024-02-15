@@ -92,6 +92,8 @@ class CR300():
 
     def get_one_records_data(self):
         out_lines = self.send_command("SHOW RECORDS").splitlines()[1:-1]
+        if len(out_lines) == 0:
+            return pd.DataFrame([])
         out_lines[0] = ' '.join(['date', 'time', 'type', 'id'] + out_lines[0].split()[1:])
         out = '\n'.join(out_lines).replace('   ', ' ').replace('   ', ' ')
         df = pd.read_csv(StringIO(out), sep=' ', header=0, index_col=3)
@@ -104,10 +106,10 @@ class CR300():
         keep_seeking = True
         while keep_seeking:
             df = self.get_one_records_data()
-            dfs.append(df)
             if len(df) == 0:
                 keep_seeking = False
-            print(len(df))
+            else:
+                dfs.append(df)
         df = pd.concat(dfs)
         return df
 
