@@ -34,8 +34,9 @@ def get_from_cr300(cr300: CR300, outpath: str):
         if df.empty:
             df = df0
         else:
-            df = pd.concat([df0, df]).drop_duplicates('id')
-    df.to_csv(outpath)
+            df = pd.concat([df0, df]).drop_duplicates()
+    if not df.empty:
+        df.to_csv(outpath)
 
 
 def upload_files(config: dict, out_dir: str, current_file: str):

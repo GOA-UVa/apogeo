@@ -111,7 +111,7 @@ class CR300():
             else:
                 dfs.append(df)
         if dfs:
-            df = pd.concat(dfs).drop_duplicates('id')
+            df = pd.concat(dfs).drop_duplicates()
         return df
 
     def get_all_records_data(self):
