@@ -1,9 +1,9 @@
 {
 	"serialport": "COM4",
-	"sftpuser": "sftpuser",
-	"sftppass": "sftppass",
-	"sftphost": "sftphost",
-	"sftpdir": "sftpdir",
+	"remoteuser": "ftpuser",
+	"remotepass": "ftppass",
+	"remotehost": "ftphost",
+	"remotedir": "ftpdir",
 	"host_key_checking": true,
 	"minutes_wait_loop": 60
 }

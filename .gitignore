@@ -3,3 +3,4 @@ out
 __pycache__
 config.json
 sent
+logs

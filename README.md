@@ -3,8 +3,9 @@
 Software encargado de recibir los datos del DataLogger CR300 que recibe datos de los apogees situados en la Base Marambio, y enviar esos mismos datos a un servidor sftp del GOA.
 
 Archivos presentes:
-- cr300: Modulo de python que permite acceder a los datos del CR300.
-- read_data.py: Script principal en python que lee el CR300 y sube los datos al servidor sftp.
+- apogeo: Modulo de python con el código necesario para acceder a los datos y enviarlos al servidor FTP.
+- apogeo/cr300: Modulo de python que permite acceder a los datos del CR300.
+- read_data.py: Script principal en python que lee el CR300 y sube los datos al servidor FTP.
 - apo2.CR300: Programa que se ejecuta dentro del CR300.
 - requirements.txt: Requisitos del entorno de python para poder ejecutar el read_data.py
 - run.bat: Fichero .bat para poder ejecutar el programa en cada arranque de Windows.
@@ -58,6 +59,8 @@ del fichero config.json.
 En Windows habitualmente es "COM4" y en Linux "/dev/ttyACM0". En Linux también puede introducirse
 el id directamente, lo cual quedaría para la instalación actual como:
 "/dev/serial/by-id/usb-Campbell_Scientific__Inc._CR300_00000000050C-if00".
+Esto es útil en caso de que se quieran leer todos los datos del CR300, pues se fuerza el reinicio
+del CR300 lo cual cambia normalmente de "/dev/ttyACM0" a "/dev/ttyACM1", pero el id sigue igual.
 
 ### Linux
 
