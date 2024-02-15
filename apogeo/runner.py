@@ -10,6 +10,7 @@ from threading import Lock, Thread
 
 """___Third-Party Modules___"""
 import pandas as pd
+from serial.serialutil import SerialException
 
 """___Apogeo Modules___"""
 from .cr300.cr300 import CR300
@@ -120,6 +121,22 @@ def run():
             log.info('Stored CR300 info')
             upload_files(config, out_dir, filename)
             log.info('Uploaded files through FTP')
+        except SerialException as e:
+            trace = traceback.format_exc()
+            log.error(f'Error when running the main loop: {e}.\nTrace: {trace}')
+            print(f'Error when running the main loop: {e}.\nIs the connection to the CR300 correct?')
+            print('Reconnecting...')
+            try:
+                cr300 = CR300(port, fast=True)
+            except Exception as e:
+                msg = f'ERROR opening connection with CR300: {e}.\nMake sure no other program is connected to the CR300 (PC400, LoggerNet...)'
+                print(msg)
+                log.critical(msg)
+            log.info('Connecting to CR300...')
+            while not connected:
+                connected = cr300.connect()
+            log.info('Connected')
+            print('Reconnected')
         except Exception as e:
             trace = traceback.format_exc()
             log.error(f'Error when running the main loop: {e}.\nTrace: {trace}')
