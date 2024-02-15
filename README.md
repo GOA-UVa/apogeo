@@ -47,9 +47,11 @@ pip install -r requirements.txt
 
 #### Ejecución
 
-La ejecución simplemente deberá ser realizada mediante el gestor de tareas, que deberá
-indicarse a windows que se quiere ejecutar el archivo .venv/bin/python.exe con el fichero read_data.py
-como argumento.
+La ejecución simplemente deberá ser realizada mediante el programador de tareas de Windows,
+al cual se le deberá indicar que se quiere ejecutar el archivo .venv/Scripts/python.exe
+con el fichero read_data.py como argumento, desde el directorio en el que se encuentre
+este repositorio. La tarea deberá ser desencadenada una vez a una hora concreta arbitraria,
+y se repetirá cada 2 horas indefinidamente.
 
 ## Como encontrar el puerto
 
