@@ -8,7 +8,6 @@ Archivos presentes:
 - read_data.py: Script principal en python que lee el CR300 y sube los datos al servidor FTP.
 - apo2.CR300: Programa que se ejecuta dentro del CR300.
 - requirements.txt: Requisitos del entorno de python para poder ejecutar el read_data.py
-- run.bat: Fichero .bat para poder ejecutar el programa en cada arranque de Windows.
 - config.mock.json: Fichero json con datos de ejemplo que deberán ser sustituidos con los reales en producción, y guardado como config.json.
 
 ## Como instalar y ejecutar
@@ -48,8 +47,9 @@ pip install -r requirements.txt
 
 #### Ejecución
 
-La ejecución simplemente deberá ser realizada mediante el fichero run.bat, que deberá
-indicarse a windows que se quiere ejecutar en cada arranque del equipo para que siempre se ejecute.
+La ejecución simplemente deberá ser realizada mediante el gestor de tareas, que deberá
+indicarse a windows que se quiere ejecutar el archivo .venv/bin/python.exe con el fichero read_data.py
+como argumento.
 
 ## Como encontrar el puerto
 
