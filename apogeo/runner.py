@@ -30,7 +30,9 @@ def get_from_cr300(cr300: CR300, outpath: str):
         if df.empty:
             df = df0
         else:
-            df = pd.concat([df0, df]).drop_duplicates()
+            df = pd.concat([df0, df])
+            df.index = df.index.astype(int)
+            df[~df.index.duplicated(keep='first')]
     if not df.empty:
         df.to_csv(outpath)
 
