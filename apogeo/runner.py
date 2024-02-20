@@ -38,14 +38,20 @@ def get_from_cr300(cr300: CR300, outpath: str):
 
 
 def upload_files(config: dict, out_dir: str, current_file: str):
+    log = logger.get_logger()
     files = os.listdir(out_dir)
     for file in files:
         fullpath = os.path.join(out_dir, file)
-        ftp.upload_file_ftp(fullpath, config)
-        if file != current_file:
-            os.makedirs(_DIR_SENT_OLD, exist_ok=True)
-            dst = os.path.join(_DIR_SENT_OLD, file)
-            shutil.move(fullpath, dst)
+        try:
+            ftp.upload_file_ftp(fullpath, config)
+            if file != current_file:
+                os.makedirs(_DIR_SENT_OLD, exist_ok=True)
+                dst = os.path.join(_DIR_SENT_OLD, file)
+                shutil.move(fullpath, dst)
+        except Exception as e:
+            trace = traceback.format_exc()
+            log.error(f'Error uploading file via ftp: {e}. {trace}')
+            print(f'Error uploading file via ftp: {e}')
 
 
 def run():

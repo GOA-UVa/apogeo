@@ -18,16 +18,13 @@ class CnOptsNoHostKeys(pysftp.CnOpts):
 
 def upload_file_sftp(path: str, config: dict):
     log = logger.get_logger()
-    try:
-        cnopts = CnOptsNoHostKeys()
-        if 'host_key_checking' in config and config['host_key_checking']:
-            try:
-                cnopts = pysftp.CnOpts()
-            except pysftp.HostKeysException as e:
-                log.warning(f'Warning: {e}')
-        with pysftp.Connection(config['remotehost'], config['remoteuser'], password=config['remotepass'], cnopts=cnopts) as srv:
-            log.info(f'Sending {path}...')
-            dest_path = os.path.join(config['remotedir'], os.path.basename(path))
-            srv.put(path, dest_path)
-    except Exception as e:
-        log.error(f'Error uploading file via sftp: {e}')
+    cnopts = CnOptsNoHostKeys()
+    if 'host_key_checking' in config and config['host_key_checking']:
+        try:
+            cnopts = pysftp.CnOpts()
+        except pysftp.HostKeysException as e:
+            log.warning(f'Warning: {e}')
+    with pysftp.Connection(config['remotehost'], config['remoteuser'], password=config['remotepass'], cnopts=cnopts) as srv:
+        log.info(f'Sending {path}...')
+        dest_path = os.path.join(config['remotedir'], os.path.basename(path))
+        srv.put(path, dest_path)
