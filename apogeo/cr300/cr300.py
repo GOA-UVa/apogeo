@@ -113,7 +113,7 @@ class CR300():
         if dfs:
             df = pd.concat(dfs)
             df.index = df.index.astype(int)
-            df[~df.index.duplicated(keep='first')]
+            df = df[~df.index.duplicated(keep='last')]
         return df
 
     def get_all_records_data(self):
