@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 from typing import List
 import os
+from datetime import timedelta as td
 
 import numpy as np
 import pandas as pd
 # needs matplotlib and scipy too
 
-_DIR_CSVS = '/srv/ftpuser/data/apogees_marambio' #'./out'
+_DIR_CSVS = './out'
+_DIR_CSVS = '/srv/ftpuser/data/apogees_marambio'
 _N_DAYS = 3
-_TARGET = '/var/www/goacf/realtime/images/last_marambio_apogees_graph.png' #'./out/last_apogee_graph.png'
+_TARGET = './out/last_apogee_graph.png'
+_TARGET = '/var/www/goacf/realtime/images/last_marambio_apogees_graph.png'
 _YTICK = 10
 
 def read_datafiles(paths: List[str]) -> pd.DataFrame:
@@ -20,6 +23,7 @@ def read_datafiles(paths: List[str]) -> pd.DataFrame:
         df[list(namemapper.values())] = df[list(namemapper.values())] - 273.15
         dfs.append(df)
     df = pd.concat(dfs).reset_index(drop=True).drop_duplicates(['datetime'], keep='last').sort_values('datetime')
+    df = df[df['datetime'] > df['datetime'].max() - td(_N_DAYS)]
     return df
 
 def main():
