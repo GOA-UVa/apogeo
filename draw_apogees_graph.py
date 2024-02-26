@@ -19,7 +19,7 @@ def read_datafiles(paths: List[str]) -> pd.DataFrame:
         df = df.rename(columns=namemapper)
         df[list(namemapper.values())] = df[list(namemapper.values())] - 273.15
         dfs.append(df)
-    df = pd.concat(dfs).reset_index(drop=True).drop_duplicates(['datetime'])
+    df = pd.concat(dfs).reset_index(drop=True).drop_duplicates(['datetime'], keep='last').sort_values('datetime')
     return df
 
 def main():
