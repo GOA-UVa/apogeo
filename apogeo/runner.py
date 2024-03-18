@@ -10,7 +10,7 @@ import pandas as pd
 
 """___Apogeo Modules___"""
 from .cr300.cr300 import CR300
-from . import sftp, logger
+from . import logger
 
 _OUT_DIR = 'out'
 _DIR_SENT_OLD = 'sent'
@@ -43,7 +43,15 @@ def upload_files(config: dict, out_dir: str, current_file: str):
     for file in files:
         fullpath = os.path.join(out_dir, file)
         try:
-            sftp.upload_file_sftp(fullpath, config)
+            remote_protocol = "ftp"
+            if "remoteprotocol" in config:
+                remote_protocol = config["remoteprotocol"].lower()
+            if remote_protocol == "sftp":
+                from . import sftp # lazy import, avoid unnecesary dependencies
+                sftp.upload_file_sftp(fullpath, config)
+            else: # default or ftp
+                from . import ftp
+                ftp.upload_file_ftp(fullpath, config)
             if file != current_file:
                 os.makedirs(_DIR_SENT_OLD, exist_ok=True)
                 dst = os.path.join(_DIR_SENT_OLD, file)

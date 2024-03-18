@@ -3,5 +3,7 @@
 	"remoteuser": "ftpuser",
 	"remotepass": "ftppass",
 	"remotehost": "ftphost",
-	"remotedir": "ftpdir"
+	"remotedir": "ftpdir",
+	"remoteprotocol": "ftp",
+	"host_key_checking": false
 }

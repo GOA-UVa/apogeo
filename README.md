@@ -3,9 +3,9 @@
 Software encargado de recibir los datos del DataLogger CR300 que recibe datos de los apogees situados en la Base Marambio, y enviar esos mismos datos a un servidor sftp del GOA.
 
 Archivos presentes:
-- apogeo: Modulo de python con el código necesario para acceder a los datos y enviarlos al servidor FTP.
+- apogeo: Modulo de python con el código necesario para acceder a los datos y enviarlos al servidor FTP/SFTP.
 - apogeo/cr300: Modulo de python que permite acceder a los datos del CR300.
-- read_data.py: Script principal en python que lee el CR300 y sube los datos al servidor FTP.
+- read_data.py: Script principal en python que lee el CR300 y sube los datos al servidor FTP/SFTP.
 - apo2.CR300: Programa que se ejecuta dentro del CR300.
 - requirements.txt: Requisitos del entorno de python para poder ejecutar el read_data.py
 - config.mock.json: Fichero json con datos de ejemplo que deberán ser sustituidos con los reales en producción, y guardado como config.json.
