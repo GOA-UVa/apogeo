@@ -1,6 +1,6 @@
 # Apogeo
 
-![Version 24.03](https://img.shields.io/badge/version-24.03-blue) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![Version 24.03](https://img.shields.io/badge/version-24.03-blue) ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 
 Software encargado de recibir los datos del DataLogger CR300 que recibe datos de los apogees situados en la Base Marambio, y enviar esos mismos datos a un servidor FTP/SFTP del GOA.
 
