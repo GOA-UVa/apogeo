@@ -1,5 +1,7 @@
 # Apogeo
 
+![Version 24.03](https://img.shields.io/badge/version-24.03-blue) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 Software encargado de recibir los datos del DataLogger CR300 que recibe datos de los apogees situados en la Base Marambio, y enviar esos mismos datos a un servidor FTP/SFTP del GOA.
 
 Las medidas realizadas por el GOA en la Base Marambio pueden observarse en [goa.uva.es/marambio-station](https://goa.uva.es/marambio-station/).
@@ -13,7 +15,7 @@ Archivos presentes:
 - config.mock.json: Fichero json con datos de ejemplo que deberán ser sustituidos con los reales en producción, y guardado como config.json.
 - draw_apogees_graph.py: Script que genera las imágenes que muestran datos de los últimos 3 días aplicando un filtro gaussiano.
 
-## Como instalar y ejecutar
+## Instalación y ejecución
 
 ### Código del CR300
 
@@ -175,3 +177,7 @@ Action Commands
   cellular reset (Cellular reset)
   PCAP capture (Wireshark PCAP capture)
 ```
+
+### Autores
+
+- Javier Gatón Herguedas - [gaton@goa.uva.es](mailto:gaton@goa.uva.es).
