@@ -1,6 +1,8 @@
 # Apogeo
 
-Software encargado de recibir los datos del DataLogger CR300 que recibe datos de los apogees situados en la Base Marambio, y enviar esos mismos datos a un servidor sftp del GOA.
+Software encargado de recibir los datos del DataLogger CR300 que recibe datos de los apogees situados en la Base Marambio, y enviar esos mismos datos a un servidor FTP/SFTP del GOA.
+
+Las medidas realizadas por el GOA en la Base Marambio pueden observarse en [goa.uva.es/marambio-station](https://goa.uva.es/marambio-station/).
 
 Archivos presentes:
 - apogeo: Modulo de python con el código necesario para acceder a los datos y enviarlos al servidor FTP/SFTP.
@@ -9,6 +11,7 @@ Archivos presentes:
 - apo2.CR300: Programa que se ejecuta dentro del CR300.
 - requirements.txt: Requisitos del entorno de python para poder ejecutar el read_data.py
 - config.mock.json: Fichero json con datos de ejemplo que deberán ser sustituidos con los reales en producción, y guardado como config.json.
+- draw_apogees_graph.py: Script que genera las imágenes que muestran datos de los últimos 3 días aplicando un filtro gaussiano.
 
 ## Como instalar y ejecutar
 
@@ -45,6 +48,9 @@ Y finalmente se prepara el entorno virtual instalando los paquetes necesarios co
 pip install -r requirements.txt
 ```
 
+En dichos requisitos está comentada una línea con la librería necesaria para SFTP, que en
+caso de que sea el protocolo a usarse deberá ser descomentada.
+
 #### Ejecución
 
 La ejecución simplemente deberá ser realizada mediante el programador de tareas de Windows,
@@ -53,7 +59,23 @@ con el fichero read_data.py como argumento, desde el directorio en el que se enc
 este repositorio. La tarea deberá ser desencadenada una vez a una hora concreta arbitraria,
 y se repetirá cada 2 horas indefinidamente.
 
-## Como encontrar el puerto
+### Configuración
+
+La configuración deberá estar guardada en un fichero llamado 'config.json'. Para generarlo se debe
+copiar el fichero 'config.mock.json' y llamar 'config.json' a la copia. A continuación se deberán
+modificar los valores de dicho fichero a conveniencia. Los parámetros disponibles son:
+- serialport: Puerto donde se establece la comunicación en serie con el datalogger.
+- remoteuser: Nombre de usuario para acceder al servidor donde se envían los datos.
+- remotepass: Contraseña para acceder al servidor donde se envían los datos.
+- remotehost: Dirección del host servidor a donde se envían los datos.
+- remotedir: Ruta del directorio donde se guardaran los datos dentro del servidor.
+- remoteprotocol: Protocolo a usar para la comunicación de los datos con el servidor.
+Disponibles: "ftp" y "sftp". Se recomienda usar SFTP, pues la librería FTP por defecto
+de python es notablemente más lenta que la de SFTP.
+- host_key_checking: Valor booleano (true o false). Sólo útil en comunicaciones SFTP, donde en
+caso de ser true se realizará una comprobación de host-keys del host al que se conecta.
+
+## Cómo encontrar el puerto
 
 El nombre del puerto al que está conectado el CR300 deberá introducirse en el campo "serialport"
 del fichero config.json.
@@ -72,7 +94,13 @@ sudo dmesg | grep tty
 
 Via el explorador de dispositivos.
 
-## Serial CMD help output
+## Otros
+
+### Serial CMD help output
+
+El módulo de python cr300 se comunica con el datalogger mediante comunicación serial.
+Los comandos disponibles en dicha comunicación se pueden ver tras ejecutar el comando
+'help' en dicha comunicación, cuyo output es el siguiente:
 
 ```
 Status Commands
